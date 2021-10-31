@@ -1,0 +1,139 @@
+---
+title: Receivers
+author: Tyler Shada
+date: '2021-10-28'
+slug: receivers
+categories: []
+tags: []
+---
+
+
+
+```{r}
+library(tidyverse)
+library(ggrepel)
+```
+
+```{r}
+receiver <- read_csv("data/receivers.csv")
+```
+
+```{r}
+receiver <- receiver %>%
+  mutate(`Tgt` + `Rec`)
+```
+
+```{r}
+ggplot() +
+  geom_point(
+    data = receiver,
+    aes(x = `Rec`, y = `Tgt`)
+  )
+```
+
+```{r}
+ggplot() +
+  geom_point(
+    data = receiver,
+    aes(x = `Rec`, y = `Tgt`, size = G)
+  )
+```
+
+```{r}
+ggplot() +
+  geom_point(
+    data = receiver,
+    aes(x = `Rec`, y = `Tgt`, size = G),
+    alpha = .3
+  ) +
+  scale_size(range = c(3, 8), name="Gs")
+```
+
+```{r}
+receiver %>% 
+  ungroup() %>% 
+  summarise(
+    avg_rec = mean(`Rec`),
+    avg_tgt = mean(`Tgt`)
+  )
+```
+
+```{r}
+ggplot() +
+  geom_point(
+    data = receiver,
+    aes(x = `Rec`, y = `Tgt`, size = G),
+    color = "grey",
+    alpha = .35
+  ) +
+  geom_point(
+    data = receiver,
+    aes(x = `Rec`, y = `Tgt`, size = G),
+    color = "red",
+    alpha = .35
+  ) +
+  geom_vline(xintercept = 23.55912) +
+  geom_hline(yintercept = 34.61924)
+```
+
+```{r}
+ggplot() +
+  geom_point(
+    data = receiver,
+    aes(x = `Rec`, y = `Tgt`, size = G),
+    color = "grey",
+    alpha = .35
+  ) +
+  geom_point(
+    data = receiver,
+    aes(x = `Rec`, y = `Tgt`, size = G),
+    color = "red",
+    alpha = .35
+  ) +
+  geom_vline(xintercept = 23.55912) +
+  geom_hline(yintercept = 34.61924) +
+  geom_text_repel(
+    data = receiver,
+    aes(x = `Rec`, y = `Tgt`, label = Player),
+    size = 3
+  )
+```
+
+```{r}
+ggplot() +
+  geom_point(
+    data = receiver,
+    aes(x = `Rec`, y = `Tgt`, size = G),
+    color = "grey",
+    alpha = .35
+  ) +
+  geom_point(
+    data = receiver,
+    aes(x = `Rec`, y = `Tgt`, size = G),
+    color = "red",
+    alpha = .35
+  ) +
+  geom_vline(xintercept = 23.55912) +
+  geom_hline(yintercept = 34.61924) +
+  geom_text_repel(
+    data = receiver,
+    aes(x = `Rec`, y = `Tgt`, label = Player),
+    size = 3
+  ) +
+  labs(
+    x = "Receptions",
+    y = "Targets",
+    title = "Who is the best receiver in the 2020 NFL season?",
+    subtitle = "Looking at the top receivers of last season",
+    caption = "Source: Pro-Football-Reference.com | By Tyler Shada",
+    size = "Games"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 16, face = "bold"),
+    axis.title = element_text(size = 10), 
+    plot.subtitle = element_text(size=10),
+    panel.grid.minor = element_blank()
+    )
+```
+
