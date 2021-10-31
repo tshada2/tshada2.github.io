@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Tyler Shada&#39;s GitHub website</title>
-    <link>http://tshada2.github.io/</link>
-    <description>Recent content on Tyler Shada&#39;s GitHub website</description>
+    <title>Posts on Tyler Shada&#39;s GitHub website</title>
+    <link>http://tshada2.github.io/post/</link>
+    <description>Recent content in Posts on Tyler Shada&#39;s GitHub website</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 12 Oct 2021 00:00:00 +0000</lastBuildDate><atom:link href="http://tshada2.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 28 Oct 2021 00:00:00 +0000</lastBuildDate><atom:link href="http://tshada2.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Tyler&#39;s Project Website</title>
-      <link>http://tshada2.github.io/tylershada-website/</link>
-      <pubDate>Tue, 12 Oct 2021 00:00:00 +0000</pubDate>
+      <title>Receivers</title>
+      <link>http://tshada2.github.io/2021/10/28/receivers/</link>
+      <pubDate>Thu, 28 Oct 2021 00:00:00 +0000</pubDate>
       
-      <guid>http://tshada2.github.io/tylershada-website/</guid>
-      <description></description>
+      <guid>http://tshada2.github.io/2021/10/28/receivers/</guid>
+      <description>library(tidyverse)## -- Attaching packages --------------------------------------- tidyverse 1.3.1 --## v ggplot2 3.3.5 v purrr 0.3.4## v tibble 3.1.4 v dplyr 1.0.7## v tidyr 1.1.3 v stringr 1.4.0## v readr 2.0.1 v forcats 0.5.1## -- Conflicts ------------------------------------------ tidyverse_conflicts() --## x dplyr::filter() masks stats::filter()## x dplyr::lag() masks stats::lag()library(ggrepel)receiver &amp;lt;- read_csv(&amp;quot;data/receivers.csv&amp;quot;)## Rows: 499 Columns: 19## -- Column specification --------------------------------------------------------## Delimiter: &amp;quot;,&amp;quot;## chr (3): Player, Tm, Pos## dbl (16): Rk, Age, G, GS, Tgt, Rec, Ctch%, Yds, Y/R, TD, 1D, Lng, Y/Tgt, R/G.</description>
     </item>
     
     <item>
@@ -35,15 +35,6 @@ summary(cars)## speed dist ## Min. : 4.0 Min. : 2.00 ## 1st Qu.:12.0 1st Qu.: 2
       <guid>http://tshada2.github.io/2016/12/30/a-plain-markdown-post/</guid>
       <description>This is a post written in plain Markdown (*.md) instead of R Markdown (*.Rmd). The major differences are:
  You cannot run any R code in a plain Markdown document, whereas in an R Markdown document, you can embed R code chunks (```{r}); A plain Markdown post is rendered through Blackfriday, and an R Markdown document is compiled by rmarkdown and Pandoc.  There are many differences in syntax between Blackfriday&amp;rsquo;s Markdown and Pandoc&amp;rsquo;s Markdown.</description>
-    </item>
-    
-    <item>
-      <title>About</title>
-      <link>http://tshada2.github.io/about/</link>
-      <pubDate>Wed, 12 Oct 2016 00:00:00 +0000</pubDate>
-      
-      <guid>http://tshada2.github.io/about/</guid>
-      <description>This is a &amp;ldquo;hello world&amp;rdquo; example website for the blogdown package. The theme was forked from @jrutheiser/hugo-lithium-theme and modified by Yihui Xie.</description>
     </item>
     
     <item>

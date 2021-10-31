@@ -1,0 +1,152 @@
+---
+title: Receivers
+author: Tyler Shada
+date: '2021-10-28'
+slug: receivers
+categories: []
+tags: []
+---
+
+
+
+```{r}
+library(tidyverse)
+library(ggrepel)
+```
+
+```{r}
+receiver <- read_csv("data/receivers.csv")
+```
+
+```{r}
+receiver <- receiver %>%
+  mutate(`Tgt` + `Rec`)
+```
+
+```{r}
+ggplot() +
+  geom_point(
+    data = receiver,
+    aes(x = `Rec`, y = `Tgt`)
+  )
+```
+
+This graph helps out getting every player in there. It doesn't show us who they are and some of the dots are small to read.
+
+```{r}
+ggplot() +
+  geom_point(
+    data = receiver,
+    aes(x = `Rec`, y = `Tgt`, size = G)
+  )
+```
+
+This graph is bigger than the last graph. It shows how many games each player played. The problem is it is too big and is hard to make out again.
+
+```{r}
+ggplot() +
+  geom_point(
+    data = receiver,
+    aes(x = `Rec`, y = `Tgt`, size = G),
+    alpha = .3
+  ) +
+  scale_size(range = c(3, 8), name="Gs")
+```
+
+The data is faded now, but the bottom left is still clutter. I still put in how many games they been in.
+
+```{r}
+receiver %>% 
+  ungroup() %>% 
+  summarise(
+    avg_rec = mean(`Rec`),
+    avg_tgt = mean(`Tgt`)
+  )
+```
+
+This is the average targets and receptions from the players in the league. It may seem low because of how much they played every snap and some players get targeted more.
+
+```{r}
+ggplot() +
+  geom_point(
+    data = receiver,
+    aes(x = `Rec`, y = `Tgt`, size = G),
+    color = "grey",
+    alpha = .35
+  ) +
+  geom_point(
+    data = receiver,
+    aes(x = `Rec`, y = `Tgt`, size = G),
+    color = "red",
+    alpha = .35
+  ) +
+  geom_vline(xintercept = 23.55912) +
+  geom_hline(yintercept = 34.61924)
+```
+
+We have added the average line to the graph with your first color. It is still faded on where players are at. You still don't know what players are at the top.
+
+```{r}
+ggplot() +
+  geom_point(
+    data = receiver,
+    aes(x = `Rec`, y = `Tgt`, size = G),
+    color = "grey",
+    alpha = .35
+  ) +
+  geom_point(
+    data = receiver,
+    aes(x = `Rec`, y = `Tgt`, size = G),
+    color = "red",
+    alpha = .35
+  ) +
+  geom_vline(xintercept = 23.55912) +
+  geom_hline(yintercept = 34.61924) +
+  geom_text_repel(
+    data = receiver,
+    aes(x = `Rec`, y = `Tgt`, label = Player),
+    size = 3
+  )
+```
+
+We finally have the top three players on the list regarding to the most targets and receptions. Last thing we are missing is a title to put this together.
+
+```{r}
+ggplot() +
+  geom_point(
+    data = receiver,
+    aes(x = `Rec`, y = `Tgt`, size = G),
+    color = "grey",
+    alpha = .35
+  ) +
+  geom_point(
+    data = receiver,
+    aes(x = `Rec`, y = `Tgt`, size = G),
+    color = "red",
+    alpha = .35
+  ) +
+  geom_vline(xintercept = 23.55912) +
+  geom_hline(yintercept = 34.61924) +
+  geom_text_repel(
+    data = receiver,
+    aes(x = `Rec`, y = `Tgt`, label = Player),
+    size = 3
+  ) +
+  labs(
+    x = "Receptions",
+    y = "Targets",
+    title = "Who is the best receiver in the 2020 NFL season?",
+    subtitle = "Looking at the top receivers of last season",
+    caption = "Source: Pro-Football-Reference.com | By Tyler Shada",
+    size = "Games"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 16, face = "bold"),
+    axis.title = element_text(size = 10), 
+    plot.subtitle = element_text(size=10),
+    panel.grid.minor = element_blank()
+    )
+```
+
+We got our title and subtitle to help sort this out. We even made Tgts and Rec into longer words and also showing the average as well. At the bottom is showing where we got the data as well.
