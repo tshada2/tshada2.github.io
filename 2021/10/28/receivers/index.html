@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Hugo 0.88.1" />
+
+
+<title>Receivers - Tyler Shada&#39;s GitHub website</title>
+<meta property="og:title" content="Receivers - Tyler Shada&#39;s GitHub website">
+
+
+  <link href='http://tshada2.github.io/favicon.ico' rel='icon' type='image/x-icon'/>
+
+
+
+  
+
+
+
+
+
+
+
+
+<link href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css' rel='stylesheet' type='text/css' />
+
+
+
+<link rel="stylesheet" href="/css/fonts.css" media="all">
+<link rel="stylesheet" href="/css/main.css" media="all">
+
+
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="header">
+        <nav class="nav">
+  <a href="/" class="nav-logo">
+    <img src="/images/logo.png"
+         width="50"
+         height="50"
+         alt="Logo">
+  </a>
+
+  <ul class="nav-links">
+    
+    <li><a href="/about/">About</a></li>
+    
+    <li><a href="https://github.com/tshada2">GitHub</a></li>
+    
+    <li><a href="https://twitter.com/ShadaTyler">Twitter</a></li>
+    
+  </ul>
+</nav>
+
+      </header>
+
+
+<main class="content" role="main">
+
+  <article class="article">
+    
+    <span class="article-duration">3 min read</span>
+    
+
+    <h1 class="article-title">Receivers</h1>
+
+    
+    <span class="article-date">2021-10-28</span>
+    
+
+    <div class="article-content">
+      
+<script src="http://tshada2.github.io/2021/10/28/receivers/index_files/header-attrs/header-attrs.js"></script>
+
+
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## -- Attaching packages --------------------------------------- tidyverse 1.3.1 --</code></pre>
+<pre><code>## v ggplot2 3.3.5     v purrr   0.3.4
+## v tibble  3.1.4     v dplyr   1.0.7
+## v tidyr   1.1.3     v stringr 1.4.0
+## v readr   2.0.1     v forcats 0.5.1</code></pre>
+<pre><code>## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>library(ggrepel)</code></pre>
+<pre class="r"><code>receiver &lt;- read_csv(&quot;data/receivers.csv&quot;)</code></pre>
+<pre><code>## Rows: 499 Columns: 19</code></pre>
+<pre><code>## -- Column specification --------------------------------------------------------
+## Delimiter: &quot;,&quot;
+## chr  (3): Player, Tm, Pos
+## dbl (16): Rk, Age, G, GS, Tgt, Rec, Ctch%, Yds, Y/R, TD, 1D, Lng, Y/Tgt, R/G...</code></pre>
+<pre><code>## 
+## i Use `spec()` to retrieve the full column specification for this data.
+## i Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>receiver &lt;- receiver %&gt;%
+  mutate(`Tgt` + `Rec`)</code></pre>
+<pre class="r"><code>ggplot() +
+  geom_point(
+    data = receiver,
+    aes(x = `Rec`, y = `Tgt`)
+  )</code></pre>
+<p><img src="http://tshada2.github.io/2021/10/28/receivers/index_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<pre class="r"><code>ggplot() +
+  geom_point(
+    data = receiver,
+    aes(x = `Rec`, y = `Tgt`, size = G)
+  )</code></pre>
+<p><img src="http://tshada2.github.io/2021/10/28/receivers/index_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<pre class="r"><code>ggplot() +
+  geom_point(
+    data = receiver,
+    aes(x = `Rec`, y = `Tgt`, size = G),
+    alpha = .3
+  ) +
+  scale_size(range = c(3, 8), name=&quot;Gs&quot;)</code></pre>
+<p><img src="http://tshada2.github.io/2021/10/28/receivers/index_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<pre class="r"><code>receiver %&gt;% 
+  ungroup() %&gt;% 
+  summarise(
+    avg_rec = mean(`Rec`),
+    avg_tgt = mean(`Tgt`)
+  )</code></pre>
+<pre><code>## # A tibble: 1 x 2
+##   avg_rec avg_tgt
+##     &lt;dbl&gt;   &lt;dbl&gt;
+## 1    23.6    34.6</code></pre>
+<pre class="r"><code>ggplot() +
+  geom_point(
+    data = receiver,
+    aes(x = `Rec`, y = `Tgt`, size = G),
+    color = &quot;grey&quot;,
+    alpha = .35
+  ) +
+  geom_point(
+    data = receiver,
+    aes(x = `Rec`, y = `Tgt`, size = G),
+    color = &quot;red&quot;,
+    alpha = .35
+  ) +
+  geom_vline(xintercept = 23.55912) +
+  geom_hline(yintercept = 34.61924)</code></pre>
+<p><img src="http://tshada2.github.io/2021/10/28/receivers/index_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<pre class="r"><code>ggplot() +
+  geom_point(
+    data = receiver,
+    aes(x = `Rec`, y = `Tgt`, size = G),
+    color = &quot;grey&quot;,
+    alpha = .35
+  ) +
+  geom_point(
+    data = receiver,
+    aes(x = `Rec`, y = `Tgt`, size = G),
+    color = &quot;red&quot;,
+    alpha = .35
+  ) +
+  geom_vline(xintercept = 23.55912) +
+  geom_hline(yintercept = 34.61924) +
+  geom_text_repel(
+    data = receiver,
+    aes(x = `Rec`, y = `Tgt`, label = Player),
+    size = 3
+  )</code></pre>
+<pre><code>## Warning: ggrepel: 486 unlabeled data points (too many overlaps). Consider
+## increasing max.overlaps</code></pre>
+<p><img src="http://tshada2.github.io/2021/10/28/receivers/index_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<pre class="r"><code>ggplot() +
+  geom_point(
+    data = receiver,
+    aes(x = `Rec`, y = `Tgt`, size = G),
+    color = &quot;grey&quot;,
+    alpha = .35
+  ) +
+  geom_point(
+    data = receiver,
+    aes(x = `Rec`, y = `Tgt`, size = G),
+    color = &quot;red&quot;,
+    alpha = .35
+  ) +
+  geom_vline(xintercept = 23.55912) +
+  geom_hline(yintercept = 34.61924) +
+  geom_text_repel(
+    data = receiver,
+    aes(x = `Rec`, y = `Tgt`, label = Player),
+    size = 3
+  ) +
+  labs(
+    x = &quot;Receptions&quot;,
+    y = &quot;Targets&quot;,
+    title = &quot;Who is the best receiver in the 2020 NFL season?&quot;,
+    subtitle = &quot;Looking at the top receivers of last season&quot;,
+    caption = &quot;Source: Pro-Football-Reference.com | By Tyler Shada&quot;,
+    size = &quot;Games&quot;
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 16, face = &quot;bold&quot;),
+    axis.title = element_text(size = 10), 
+    plot.subtitle = element_text(size=10),
+    panel.grid.minor = element_blank()
+    )</code></pre>
+<pre><code>## Warning: ggrepel: 493 unlabeled data points (too many overlaps). Consider
+## increasing max.overlaps</code></pre>
+<p><img src="http://tshada2.github.io/2021/10/28/receivers/index_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+
+    </div>
+  </article>
+
+  
+
+
+</main>
+
+      <footer class="footer">
+        <ul class="footer-links">
+          <li>
+            <a href="/index.xml" type="application/rss+xml" target="_blank">RSS feed</a>
+          </li>
+          <li>
+            <a href="https://gohugo.io/" class="footer-links-kudos">Made with <img src="/images/hugo-logo.png" alt="Img link to Hugo website" width="22" height="22"></a>
+          </li>
+        </ul>
+      </footer>
+
+    </div>
+    
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/r.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/yaml.min.js"></script>
+<script>hljs.configure({languages: []}); hljs.initHighlightingOnLoad();</script>
+
+
+
+    
+
+    
+  </body>
+</html>
+

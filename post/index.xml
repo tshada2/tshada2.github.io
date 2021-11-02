@@ -6,7 +6,16 @@
     <description>Recent content in Posts on Tyler Shada&#39;s GitHub website</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 01 Dec 2020 21:13:14 -0500</lastBuildDate><atom:link href="http://tshada2.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 28 Oct 2021 00:00:00 +0000</lastBuildDate><atom:link href="http://tshada2.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Receivers</title>
+      <link>http://tshada2.github.io/2021/10/28/receivers/</link>
+      <pubDate>Thu, 28 Oct 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://tshada2.github.io/2021/10/28/receivers/</guid>
+      <description>library(tidyverse)## -- Attaching packages --------------------------------------- tidyverse 1.3.1 --## v ggplot2 3.3.5 v purrr 0.3.4## v tibble 3.1.4 v dplyr 1.0.7## v tidyr 1.1.3 v stringr 1.4.0## v readr 2.0.1 v forcats 0.5.1## -- Conflicts ------------------------------------------ tidyverse_conflicts() --## x dplyr::filter() masks stats::filter()## x dplyr::lag() masks stats::lag()library(ggrepel)receiver &amp;lt;- read_csv(&amp;quot;data/receivers.csv&amp;quot;)## Rows: 499 Columns: 19## -- Column specification --------------------------------------------------------## Delimiter: &amp;quot;,&amp;quot;## chr (3): Player, Tm, Pos## dbl (16): Rk, Age, G, GS, Tgt, Rec, Ctch%, Yds, Y/R, TD, 1D, Lng, Y/Tgt, R/G.</description>
+    </item>
+    
     <item>
       <title>Hello R Markdown</title>
       <link>http://tshada2.github.io/2020/12/01/hello-r-markdown/</link>
