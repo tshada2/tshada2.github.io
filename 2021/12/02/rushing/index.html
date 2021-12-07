@@ -22,6 +22,11 @@
 
 
 
+
+<link href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css' rel='stylesheet' type='text/css' />
+
+
+
 <link rel="stylesheet" href="/css/fonts.css" media="all">
 <link rel="stylesheet" href="/css/main.css" media="all">
 
@@ -57,7 +62,7 @@
 
   <article class="article">
     
-    <span class="article-duration">1 min read</span>
+    <span class="article-duration">26 min read</span>
     
 
     <h1 class="article-title">Rushing</h1>
@@ -71,7 +76,915 @@
 <script src="http://tshada2.github.io/2021/12/02/rushing/index_files/header-attrs/header-attrs.js"></script>
 
 
-<p>The NFL best running backs.</p>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## Warning: package &#39;tidyverse&#39; was built under R version 4.1.2</code></pre>
+<pre><code>## -- Attaching packages --------------------------------------- tidyverse 1.3.1 --</code></pre>
+<pre><code>## v ggplot2 3.3.5     v purrr   0.3.4
+## v tibble  3.1.4     v dplyr   1.0.7
+## v tidyr   1.1.3     v stringr 1.4.0
+## v readr   2.0.1     v forcats 0.5.1</code></pre>
+<pre><code>## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>library(ggrepel)</code></pre>
+<pre><code>## Warning: package &#39;ggrepel&#39; was built under R version 4.1.2</code></pre>
+<pre class="r"><code>library(scales)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;scales&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:purrr&#39;:
+## 
+##     discard</code></pre>
+<pre><code>## The following object is masked from &#39;package:readr&#39;:
+## 
+##     col_factor</code></pre>
+<pre class="r"><code>library(ggbump)</code></pre>
+<pre class="r"><code>running &lt;- read_csv(&quot;data/rushing.csv&quot;)</code></pre>
+<pre><code>## Rows: 372 Columns: 15</code></pre>
+<pre><code>## -- Column specification --------------------------------------------------------
+## Delimiter: &quot;,&quot;
+## chr  (3): Player, Tm, Pos
+## dbl (12): Rk, Age, G, GS, Att, Yds, TD, 1D, Lng, Y/A, Y/G, Fmb</code></pre>
+<pre><code>## 
+## i Use `spec()` to retrieve the full column specification for this data.
+## i Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<p>Do you ever want to know who the best running back is in the NFL? Some might say CMC, Derrick Henry, or even Austin Ekeler. I will be showing you some graphs and tell you who is the best running back is in the game right now.</p>
+<pre class="r"><code>ggplot() +
+  geom_point(
+    data = running,
+    aes(x = `Yds`, y = `Att`, size = G),
+    color = &quot;green&quot;,
+    alpha = .2
+  ) +
+  geom_point(
+    data = running,
+    aes(x = `Yds`, y = `Att`, size = G),
+    color = &quot;orange&quot;,
+    alpha = .2
+  ) +
+  geom_vline(xintercept = 163.6237) +
+  geom_hline(yintercept = 37.07527) +
+  geom_text_repel(
+    data = running,
+    aes(x = `Yds`, y = `Att`, label = Player),
+    size = 3
+  ) +
+  labs(
+    x = &quot;Rushing Yards&quot;,
+    y = &quot;Attempts&quot;,
+    title = &quot;Who has the best rushing yards last season?&quot;,
+    subtitle = &quot;Looking back at the top rushers from last season&quot;,
+    caption = &quot;Source: Pro-Football-Reference.com | By Tyler Shada&quot;,
+    size = &quot;Games&quot;
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 16, face = &quot;bold&quot;),
+    axis.title = element_text(size = 10), 
+    plot.subtitle = element_text(size=10),
+    panel.grid.minor = element_blank()
+    )</code></pre>
+<pre><code>## Warning: ggrepel: 359 unlabeled data points (too many overlaps). Consider
+## increasing max.overlaps</code></pre>
+<p><img src="http://tshada2.github.io/2021/12/02/rushing/index_files/figure-html/unnamed-chunk-3-1.png" width="672" />
+The graph shows (Player) is the best in the game. They have the most rushing yards and most attempts which equals them to be the best player in the game right now.</p>
+<pre class="r"><code>ggplot() + 
+  geom_bump(data=running, aes(x=`Yds`, y=`Att`, color=Player)) + 
+  geom_point(data=running, aes(x=`Yds`, y=`Att`, color=Player), size = 5) +   
+  geom_text(data = running %&gt;% filter(`Yds` == min(`Yds`)), aes(x = `Yds` - .2, y= `Att`, label = Player), size = 2, hjust = 2) +
+  geom_text(data = running %&gt;% filter(`Yds` == max(`Yds`)), aes(x = `Yds` + .2, y= `Att`, label = Player), size = 2, hjust = 2) +
+  labs(title=&quot;Any suprise who the best running back in the NFL is?&quot;, subtitle=&quot;Derrick Henry leading in this category again.&quot;, y= &quot;Attempts&quot;, x = &quot;Rushing Yards&quot;) +
+  theme_minimal() +
+  theme(
+    legend.position = &quot;none&quot;,
+    panel.grid.major = element_blank(),
+    plot.title = element_text(size = 16, face = &quot;bold&quot;),
+    axis.title = element_text(size = 10), 
+    plot.subtitle = element_text(size=10), 
+    panel.grid.minor = element_blank()
+    ) </code></pre>
+<pre><code>## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group
+
+## Warning in f(...): &#39;StatBump&#39; needs at least two observations per group</code></pre>
+<p><img src="http://tshada2.github.io/2021/12/02/rushing/index_files/figure-html/unnamed-chunk-4-1.png" width="672" />
+Any surprise to come from this with Derrick Henry leading in another graph. This is coming from the graph and no surprise that Henry is still leading again with a big lead of stats against everyone. He is showing why he is the best in the NFL.</p>
+<pre class="r"><code>ggplot() +
+  geom_point(
+    data = running,
+    aes(x = `Y/G`, y = `Y/A`, size = G),
+    color = &quot;green&quot;,
+    alpha = .2
+  ) +
+  geom_point(
+    data = running,
+    aes(x = `Y/G`, y = `Y/A`, size = G),
+    color = &quot;orange&quot;,
+    alpha = .2
+  ) +
+  geom_vline(xintercept = 14.35484) +
+  geom_hline(yintercept = 4.154839) +
+  geom_text_repel(
+    data = running,
+    aes(x = `Y/G`, y = `Y/A`, label = Player),
+    size = 3
+  ) +
+  labs(
+    x = &quot;Yards Per Game&quot;,
+    y = &quot;Yards Per Attempt&quot;,
+    title = &quot;Who has the best rushing yards last season?&quot;,
+    subtitle = &quot;Looking back at the top rushers from last season&quot;,
+    caption = &quot;Source: Pro-Football-Reference.com | By Tyler Shada&quot;,
+    size = &quot;Games&quot;
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 16, face = &quot;bold&quot;),
+    axis.title = element_text(size = 8), 
+    plot.subtitle = element_text(size=5),
+    panel.grid.minor = element_blank()
+    )</code></pre>
+<pre><code>## Warning: ggrepel: 356 unlabeled data points (too many overlaps). Consider
+## increasing max.overlaps</code></pre>
+<p><img src="http://tshada2.github.io/2021/12/02/rushing/index_files/figure-html/unnamed-chunk-5-1.png" width="672" />
+After calculating yards per attempt and yards per game, Derrick Henry is still in the lead follow by Dalvin Cook and Nick Chubb. I calculated this and see if they’re any changes and their was not much any at all. Henry is still in the lead among running backs.</p>
+<pre class="r"><code>ggplot() +
+  geom_point(
+    data = running,
+    aes(x = `TD`, y = `1D`, size = G),
+    color = &quot;green&quot;,
+    alpha = .2
+  ) +
+  geom_point(
+    data = running,
+    aes(x = `TD`, y = `1D`, size = G),
+    color = &quot;orange&quot;,
+    alpha = .2
+  ) +
+  geom_vline(xintercept = 1.430108) +
+  geom_hline(yintercept = 9.569892) +
+  geom_text_repel(
+    data = running,
+    aes(x = `TD`, y = `1D`, label = Player),
+    size = 3
+  ) +
+  labs(
+    x = &quot;Touchdowns&quot;,
+    y = &quot;First Downs&quot;,
+    title = &quot;Who is the best back getting to the endzone and first down?&quot;,
+    subtitle = &quot;Looking back at the top rushers according from endzone and first down from last season&quot;,
+    caption = &quot;Source: Pro-Football-Reference.com | By Tyler Shada&quot;,
+    size = &quot;Games&quot;
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 16, face = &quot;bold&quot;),
+    axis.title = element_text(size = 8), 
+    plot.subtitle = element_text(size=10),
+    panel.grid.minor = element_blank()
+    )</code></pre>
+<pre><code>## Warning: ggrepel: 346 unlabeled data points (too many overlaps). Consider
+## increasing max.overlaps</code></pre>
+<p><img src="http://tshada2.github.io/2021/12/02/rushing/index_files/figure-html/unnamed-chunk-6-1.png" width="672" />
+Overall, from all of these graphs, Derrick Henry has became the best running back from them and can finally put everything to rest. He has proven to be better than Nick Chubb, Dalvin Cook and Alvin Kamara even. He is proven to be the best running back again from the graphs. I even mix up some of the data to make it more intriguing to see if it changes and it doesn’t really.</p>
 
     </div>
   </article>
@@ -94,6 +1007,18 @@
 
     </div>
     
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/r.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/yaml.min.js"></script>
+<script>hljs.configure({languages: []}); hljs.initHighlightingOnLoad();</script>
+
+
 
     
 
